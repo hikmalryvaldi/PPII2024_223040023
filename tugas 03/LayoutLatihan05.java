@@ -1,96 +1,130 @@
-import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
+import javax.swing.*;
 
 public class LayoutLatihan05 extends JFrame {
     
+    private JTextField namaField;
+    private JTextField hpField;
+    private JRadioButton lakiLakiRadio;
+    private JRadioButton perempuanRadio;
+    private JCheckBox wnaCheckBox;
+    private JTextArea outputArea;
+
     public LayoutLatihan05() {
         setTitle("Form Biodata");
-        setSize(400, 500);
+        setSize(400, 600); 
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLayout(new GridBagLayout());
         
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.insets = new Insets(5, 5, 5, 5);
         
-        // Judul
         JLabel titleLabel = new JLabel("Form Biodata");
-        titleLabel.setFont(new Font("Arial", Font.BOLD, 13));
+    
         gbc.gridx = 0;
         gbc.gridy = 0;
         gbc.gridwidth = 2;
         gbc.anchor = GridBagConstraints.NORTH;
         add(titleLabel, gbc);
         
-        // Nama
         JLabel namaLabel = new JLabel("Nama:");
         gbc.gridx = 0;
-        gbc.gridy = 0;
+        gbc.gridy = 1;
         gbc.gridwidth = 1;
         gbc.anchor = GridBagConstraints.WEST;
         add(namaLabel, gbc);
         
-        JTextField namaField = new JTextField(10);
-        gbc.gridx = 0;
-        gbc.gridy = 1;
-        add(namaField, gbc);
-        
-        // Nomor HP
-        JLabel hpLabel = new JLabel("Nomor HP:");
+        namaField = new JTextField(10);
         gbc.gridx = 0;
         gbc.gridy = 2;
-        add(hpLabel, gbc);
-        
-        JTextField hpField = new JTextField(10);
+        add(namaField, gbc);
+       
+        JLabel hpLabel = new JLabel("Nomor HP:");
         gbc.gridx = 0;
         gbc.gridy = 3;
+        add(hpLabel, gbc);
+        
+        hpField = new JTextField(10);
+        gbc.gridx = 0;
+        gbc.gridy = 4;
         add(hpField, gbc);
         
-        // Jenis Kelamin
         JLabel jenisKelaminLabel = new JLabel("Jenis Kelamin:");
         gbc.gridx = 1;
         gbc.gridy = 1;
+        gbc.anchor = GridBagConstraints.WEST;
         add(jenisKelaminLabel, gbc);
         
-        JPanel jenisKelaminPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        JPanel jenisKelaminPanel = new JPanel();
+        jenisKelaminPanel.setLayout(new BoxLayout(jenisKelaminPanel, BoxLayout.Y_AXIS));
         ButtonGroup jenisKelaminGroup = new ButtonGroup();
-        JRadioButton lakiLakiRadio = new JRadioButton("Laki-Laki");
-        JRadioButton perempuanRadio = new JRadioButton("Perempuan"+"\n");
+        lakiLakiRadio = new JRadioButton("Laki-Laki");
+        perempuanRadio = new JRadioButton("Perempuan");
         jenisKelaminGroup.add(lakiLakiRadio);
         jenisKelaminGroup.add(perempuanRadio);
         jenisKelaminPanel.add(lakiLakiRadio);
         jenisKelaminPanel.add(perempuanRadio);
         gbc.gridx = 1;
         gbc.gridy = 2;
+        gbc.gridheight = 3;
+        gbc.anchor = GridBagConstraints.NORTHWEST;
         add(jenisKelaminPanel, gbc);
-        
-        // Warga Negara Asing
-        JCheckBox wnaCheckBox = new JCheckBox("Warga Negara Asing");
+    
+       
+        wnaCheckBox = new JCheckBox("Warga Negara Asing");
         gbc.gridx = 1;
         gbc.gridy = 4;
+        gbc.gridwidth = 2;
+        gbc.anchor = GridBagConstraints.WEST;
         add(wnaCheckBox, gbc);
         
-        // Tombol Simpan
         JButton simpanButton = new JButton("Simpan");
-        gbc.gridx = 1;
+        gbc.gridx = 0;
         gbc.gridy = 6;
-        gbc.anchor = GridBagConstraints.WEST;
+        gbc.gridwidth = 2;
+        gbc.anchor = GridBagConstraints.CENTER;
         add(simpanButton, gbc);
 
-        JTextArea textArea = new JTextArea(5, 20);
-        textArea.setLineWrap(true);
-        textArea.setWrapStyleWord(true);
-        JScrollPane scrollPane = new JScrollPane(textArea);
+        outputArea = new JTextArea(10, 30);
+        outputArea.setEditable(false);
+        JScrollPane scrollPane = new JScrollPane(outputArea);
         gbc.gridx = 0;
-        gbc.gridy = 8;
+        gbc.gridy = 10;
         gbc.gridwidth = 2;
-        gbc.fill = GridBagConstraints.BOTH;
+        gbc.fill = GridBagConstraints.HORIZONTAL;
         add(scrollPane, gbc);
-        
+
+        simpanButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                displayOutput();
+            }
+        });
+
         setVisible(true);
+    }
+
+    private void displayOutput() {
+        String nama = namaField.getText();
+        String nomorHP = hpField.getText();
+        String jenisKelamin = lakiLakiRadio.isSelected() ? "Laki-Laki" : "Perempuan";
+        String wna = wnaCheckBox.isSelected() ? "Ya" : "Tidak";
+
+        String output = String.format(
+            "Nama: %s\nNomor HP: %s\nJenis Kelamin: %s\nWarga Negara Asing: %s",
+            nama, nomorHP, jenisKelamin, wna
+        );
+
+        outputArea.setText(output);
     }
     
     public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> new LayoutLatihan05());
+        javax.swing.SwingUtilities.invokeLater(new Runnable() {
+            public void run() {
+                LayoutLatihan05 l = new LayoutLatihan05();
+                l.setVisible(true);
+            }
+        });
     }
 }
